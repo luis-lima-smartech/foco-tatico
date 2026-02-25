@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOCO - Comando Institucional PMAL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pmal-black: #0a0a0a;
+            --pmal-grey: #1a1a1a;
+            --pmal-red: #cc0000;
+            --pmal-white: #ffffff;
+            --pmal-silver: #4b5563;
+        }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--pmal-black); 
+            color: var(--pmal-white);
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.94), rgba(0,0,0,0.94)),
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l2.5 10h10l-8 6 3 10-7.5-6-7.5 6 3-10-8-6h10z' fill='%23ffffff' fill-opacity='0.02'/%3E%3C/svg%3E");
+            min-height: 100vh;
+            cursor: default;
+            padding-bottom: 40px; 
+        }
+
+        .pmal-card {
+            background: linear-gradient(145deg, #1f1f1f, #0d0d0d);
+            border: 1px solid #333;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+            position: relative;
+        }
+
+        .grid-schedule {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            min-width: 850px;
+            background: #080808;
+            border: 2px solid #222;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .grid-schedule::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 5 L85 20 L85 50 C85 70 50 95 50 95 C50 95 15 70 15 50 L15 20 Z' fill='none' stroke='white' stroke-width='1' stroke-opacity='0.04'/%3E%3Cpath d='M30 40 L50 20 L70 40 M30 55 L50 35 L70 55 M30 70 L50 50 L70 70' fill='none' stroke='white' stroke-width='2' stroke-opacity='0.04'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-size: contain;
+            pointer-events: none;
+        }
+
+        .day-header {
+            background: #1a1a1a;
+            color: var(--pmal-white);
+            text-transform: uppercase;
+            font-weight: 900;
+            letter-spacing: 0.15em;
+            padding: 18px;
+            font-size: 0.75rem;
+            border-bottom: 4px solid var(--pmal-red);
+            text-align: center;
+        }
+
+        .study-cell { 
+            height: 130px; 
+            border-bottom: 1px solid #1a1a1a; 
+            border-right: 1px solid #1a1a1a;
+            background: rgba(10,10,10,0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .subject-card {
+            cursor: crosshair;
+            font-size: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 12px;
+            height: 100%;
+            width: 100%;
+            font-weight: 800;
+            border-bottom: 4px solid transparent;
+            color: #ffffff !important;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+            transition: all 0.2s ease;
+        }
+        
+        .study-cell:hover {
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.05);
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(204, 0, 0, 0.2);
+        }
+        
+        .study-cell:hover .subject-card {
+            border-bottom-color: var(--pmal-white);
+        }
+
+        .color-portugues { background: #1f1f1f; border-bottom-color: #4b5563; }
+        .color-exatas { background: #450a0a; border-bottom-color: var(--pmal-red); }
+        .color-direito { background: #374151; border-bottom-color: #6b7280; }
+        .color-revisao { background: var(--pmal-red); border-bottom-color: #ffffff; }
+        .color-descanso { background: #0a0a0a; color: rgba(255,255,255,0.3) !important; font-style: italic; }
+        .color-completed { background: #064e3b !important; border-bottom-color: #10b981 !important; opacity: 0.8; }
+
+        .mission-clock {
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: -1px;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        @keyframes pulse-timer {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(0.97); color: var(--pmal-red); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .timer-active { animation: pulse-timer 2s infinite ease-in-out; }
+
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+        .modal.active { display: flex; }
+
+        .timer-input {
+            background: #000;
+            border: 1px solid #333;
+            width: 80px;
+            height: 45px;
+            text-align: center;
+            outline: none;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 4px;
+            appearance: auto !important;
+            -webkit-appearance: number-input !important;
+        }
+        .timer-input:focus { border-color: var(--pmal-red); }
+
+        .status-dot {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #333;
+        }
+        .status-dot.active { background: #10b981; box-shadow: 0 0 8px #10b981; }
+
+        .header-logo-display {
+            display: block;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 150px; 
+            height: 150px;
+        }
+        .header-logo-display:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.5));
+        }
+        .header-logo-display img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* ESTILIZAÇÃO DO RODAPÉ ATUALIZADA */
+        .footer-branding {
+            width: 100%;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px; 
+        }
+
+        .footer-static-text {
+            color: #555;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            pointer-events: none; 
+        }
+
+        .smartech-footer-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent;
+            border: none;
+        }
+
+        .smartech-footer-link:hover {
+            transform: scale(1.15) translateY(-2px); 
+        }
+
+        .smartech-footer-link img {
+            height: 45px; 
+            width: auto;
+            border-radius: 6px;
+            filter: grayscale(100%) brightness(0.7);
+            transition: all 0.3s ease;
+        }
+
+        .smartech-footer-link:hover img {
+            filter: grayscale(0%) brightness(1.1) drop-shadow(0 0 15px rgba(0, 163, 255, 0.5));
+        }
+    </style>
+</head>
+<body class="p-4 md:p-10">
+
+    <div class="max-w-7xl mx-auto relative">
+        
+        <!-- Header / Comando PMAL -->
+        <div class="pmal-card rounded-2xl p-8 mb-10 flex flex-col lg:flex-row justify-between items-center gap-10 border-b-2 border-white/5">
+            
+            <div class="flex items-center gap-8">
+                <!-- Logo Caveira BOPE -->
+                <div class="header-logo-display">
+                    <img src="caveirabope.png" alt="Caveira BOPE" onerror="this.src='https://via.placeholder.com/150x150?text=BOPE'">
+                </div>
+                
+                <div class="text-center lg:text-left">
+                    <h1 class="text-5xl font-black italic text-white tracking-tighter uppercase mb-2">Foco Tático</h1>
+                    <div class="flex items-center justify-center lg:justify-start gap-4">
+                        <div class="h-1 w-12 bg-red-600 rounded-full"></div>
+                        <p class="text-slate-400 font-bold tracking-[0.4em] text-[11px] uppercase">Comando de Instrução PMAL</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timer Ajustável -->
+            <div class="bg-zinc-900/40 p-6 rounded-2xl border border-white/5 shadow-2xl min-w-[340px] text-center backdrop-blur-sm">
+                <div class="flex justify-center items-center gap-2 mb-2">
+                    <span class="text-[10px] font-black uppercase tracking-[0.4em] text-red-500">Contagem Regressiva</span>
+                    <button id="btn-edit-timer" title="Ajustar Tempo" class="text-zinc-600 hover:text-white transition">
+                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                    </button>
+                </div>
+                
+                <div id="timer-display" class="mission-clock text-6xl font-bold mb-6 italic" onclick="toggleTimerEdit()">04:00:00</div>
+                
+                <!-- Área de edição com spinners visíveis -->
+                <div id="timer-edit-fields" class="hidden mb-6 flex justify-center items-center gap-2 font-mono text-xl">
+                    <input type="number" id="input-hours" value="4" min="0" max="23" class="timer-input"> :
+                    <input type="number" id="input-minutes" value="0" min="0" max="59" class="timer-input"> :
+                    <input type="number" id="input-seconds" value="0" min="0" max="59" class="timer-input">
+                    <button id="btn-save-timer" class="bg-red-600 text-white w-10 h-10 rounded-md ml-2 font-bold flex items-center justify-center shadow-lg hover:bg-red-500 transition">✓</button>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <button id="btn-start" class="bg-white text-black font-black py-4 rounded-xl text-[11px] uppercase tracking-widest hover:bg-slate-200 transition-all active:scale-95 shadow-lg">Engajar</button>
+                    <button id="btn-reset" class="bg-zinc-800 text-zinc-400 font-black py-4 rounded-xl text-[11px] uppercase tracking-widest hover:text-white transition-all border border-white/5">Abortar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grade Semanal -->
+        <div class="overflow-x-auto rounded-2xl border border-white/5 shadow-2xl">
+            <div class="grid-schedule" id="main-grid">
+                <div class="day-header border-r border-white/5">Segunda</div>
+                <div class="day-header border-r border-white/5">Terça</div>
+                <div class="day-header border-r border-white/5">Quarta</div>
+                <div class="day-header border-r border-white/5">Quinta</div>
+                <div class="day-header border-r border-white/5">Sexta</div>
+                <div class="day-header border-r border-white/5 text-red-400">Sábado</div>
+                <div class="day-header text-red-400">Domingo</div>
+
+                <div id="schedule-body" class="contents"></div>
+            </div>
+        </div>
+
+        <!-- Legenda e Dicas -->
+        <div class="mt-10 grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="pmal-card p-6 rounded-2xl border-l-4 border-red-600">
+                <h4 class="text-red-600 text-[10px] font-black uppercase tracking-widest mb-2">Hierarquia</h4>
+                <p class="text-slate-400 text-xs italic">"A disciplina é o alicerce de toda vitória militar."</p>
+            </div>
+            <div class="pmal-card p-6 rounded-2xl border-l-4 border-white">
+                <h4 class="text-white text-[10px] font-black uppercase tracking-widest mb-2">Interação</h4>
+                <p class="text-slate-400 text-xs leading-relaxed">Clique para marcar como concluído. Use o botão direito para editar.</p>
+            </div>
+            <div class="pmal-card p-6 rounded-2xl border-l-4 border-zinc-600">
+                <h4 class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-2">Tempo Flexível</h4>
+                <p class="text-slate-400 text-xs leading-relaxed">O cronômetro pulsa quando ativo. Ajuste sua meta no ícone de lápis.</p>
+            </div>
+            <div class="pmal-card p-6 rounded-2xl border-l-4 border-red-600">
+                <h4 class="text-red-600 text-[10px] font-black uppercase tracking-widest mb-2">Foco</h4>
+                <p class="text-slate-400 text-xs">Simulados constantes são o único caminho para a excelência.</p>
+            </div>
+        </div>
+
+        <!-- Rodapé SmarTech Reformulado -->
+        <div class="footer-branding">
+            <span class="footer-static-text">Criado e desenvolvido por</span>
+            <a href="https://luis-lima-smartech.github.io/" target="_blank" class="smartech-footer-link" title="Visitar site SmarTech">
+                <img src="logo_smartech.JPEG" alt="SmarTech" onerror="this.src='https://via.placeholder.com/150x45?text=SmarTech'">
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Modal de Edição -->
+    <div id="modal-edit" class="modal">
+        <div class="pmal-card p-10 rounded-3xl border border-white/10 w-full max-w-lg mx-4">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-2 h-10 bg-red-600 rounded-full"></div>
+                <div>
+                    <h2 class="text-2xl font-black uppercase tracking-tighter text-white">Alterar Diretriz</h2>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Modificar plano de ataque</p>
+                </div>
+            </div>
+            
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-3">Arsenal de Disciplinas:</label>
+                    <select id="subject-select" class="w-full p-4 bg-zinc-900 border border-white/10 rounded-xl focus:border-red-600 outline-none transition-all text-white font-bold">
+                        <option value="">-- Selecionar Módulo --</option>
+                        <option value="Língua Portuguesa">Língua Portuguesa</option>
+                        <option value="Matemática e RLM">Matemática / RLM</option>
+                        <option value="Informática">Informática</option>
+                        <option value="Direito Penal">Direito Penal</option>
+                        <option value="Direito Constitucional">Direito Constitucional</option>
+                        <option value="Direito Administrativo">Direito Administrativo</option>
+                        <option value="Legislação Especial/DH">Legislação Especial</option>
+                        <option value="REVISÃO GERAL">Revisão Tática</option>
+                        <option value="SIMULADO">Simulado</option>
+                        <option value="DESCANSO">Descanso</option>
+                        <option value="VAZIO">Limpar Bloco</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-3">Missão Customizada:</label>
+                    <input type="text" id="subject-custom" placeholder="Ex: Criminologia, Redação..." class="w-full p-4 bg-zinc-900 border border-white/10 rounded-xl focus:border-red-600 outline-none transition-all text-white font-bold placeholder:text-zinc-700">
+                </div>
+            </div>
+            
+            <div class="flex gap-4 mt-10">
+                <button id="modal-cancel" class="flex-1 py-4 text-slate-500 font-black uppercase text-[11px] tracking-widest hover:bg-zinc-800 rounded-xl transition">Cancelar</button>
+                <button id="modal-save" class="flex-[2] py-4 bg-red-600 text-white font-black uppercase text-[11px] tracking-widest rounded-xl hover:bg-red-500 transition shadow-xl shadow-red-900/30">Salvar Alteração</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURAÇÃO DO ARSENAL SONORO ---
+        const sfxPaths = {
+            click: 'engatilhar.mp4', 
+            shots: 'tiros.mp4',      
+            siren: 'sereia.mp4'      
+        };
+
+        const sfx = {
+            click: new Audio(sfxPaths.click),
+            shots: new Audio(sfxPaths.shots),
+            siren: new Audio(sfxPaths.siren)
+        };
+
+        let audioUnlocked = false;
+
+        const unlockAudio = async () => {
+            if (audioUnlocked) return;
+            try {
+                for (let key in sfx) {
+                    sfx[key].volume = 0;
+                    const p = sfx[key].play();
+                    if (p) {
+                        p.then(() => {
+                            sfx[key].pause();
+                            sfx[key].currentTime = 0;
+                            sfx[key].volume = 0.5;
+                        }).catch(() => {});
+                    }
+                }
+                audioUnlocked = true;
+            } catch (e) {}
+        };
+
+        const playSfx = (type) => {
+            unlockAudio();
+            const a = sfx[type];
+            if (a) {
+                a.currentTime = 0;
+                a.play().catch(e => console.log("Erro som:", e));
+            }
+        };
+
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+        const rows = 4; 
+        const days = ["seg", "ter", "qua", "qui", "sex", "sab", "dom"];
+        
+        const defaultSchedule = {
+            "seg-0": "Língua Portuguesa", "seg-1": "Direito Penal", "seg-2": "Língua Portuguesa", "seg-3": "Direito Penal",
+            "ter-0": "Matemática e RLM", "ter-1": "Direito Constitucional", "ter-2": "Matemática e RLM", "ter-3": "Direito Constitucional",
+            "qua-0": "Língua Portuguesa", "qua-1": "Direito Administrativo", "qua-2": "Informática", "qua-3": "Direito Administrativo",
+            "qui-0": "Legislação Especial/DH", "qui-1": "Direito Penal", "qui-2": "Legislação Especial/DH", "qui-3": "Direito Penal",
+            "sex-0": "Língua Portuguesa", "sex-1": "REVISÃO GERAL", "sex-2": "Direito Constitucional", "sex-3": "REVISÃO GERAL",
+            "sab-0": "SIMULADO", "sab-1": "SIMULADO", "sab-2": "REVISÃO GERAL", "sab-3": "DESCANSO",
+            "dom-0": "DESCANSO", "dom-1": "DESCANSO", "dom-2": "DESCANSO", "dom-3": "DESCANSO"
+        };
+
+        let scheduleData = JSON.parse(localStorage.getItem('studySchedule_institucional_v2')) || defaultSchedule;
+        let completedCells = JSON.parse(localStorage.getItem('completedCells_pmal')) || [];
+        let currentCellId = null;
+
+        // --- TIMER LOGIC ---
+        let totalSeconds = parseInt(localStorage.getItem('customStudyTime')) || (4 * 60 * 60);
+        let timeLeft = totalSeconds;
+        let timerId = null;
+
+        const timerDisplay = document.getElementById('timer-display');
+        const timerEdit = document.getElementById('timer-edit-fields');
+        const btnStart = document.getElementById('btn-start');
+
+        function updateTimerUI() {
+            const h = Math.floor(timeLeft / 3600);
+            const m = Math.floor((timeLeft % 3600) / 60);
+            const s = timeLeft % 60;
+            timerDisplay.textContent = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function toggleTimerEdit() {
+            if (timerId) return; 
+            timerDisplay.classList.toggle('hidden');
+            timerEdit.classList.toggle('hidden');
+        }
+
+        function saveTimer() {
+            const h = parseInt(document.getElementById('input-hours').value) || 0;
+            const m = parseInt(document.getElementById('input-minutes').value) || 0;
+            const s = parseInt(document.getElementById('input-seconds').value) || 0;
+            totalSeconds = (h * 3600) + (m * 60) + s;
+            if (totalSeconds < 1) totalSeconds = 1;
+            timeLeft = totalSeconds;
+            localStorage.setItem('customStudyTime', totalSeconds);
+            
+            playSfx('click'); 
+            
+            updateTimerUI();
+            toggleTimerEdit();
+        }
+
+        btnStart.onclick = () => {
+            unlockAudio();
+            playSfx('click'); 
+
+            if (timerId) {
+                clearInterval(timerId);
+                timerId = null;
+                btnStart.textContent = "Retomar";
+                timerDisplay.classList.remove('timer-active');
+            } else {
+                timerDisplay.classList.add('timer-active');
+                timerId = setInterval(() => {
+                    if (timeLeft > 0) {
+                        if (timeLeft % 3600 === 0 && timeLeft !== totalSeconds) {
+                            playSfx('shots');
+                        }
+                        timeLeft--;
+                        updateTimerUI();
+                    } else {
+                        clearInterval(timerId);
+                        timerId = null;
+                        timerDisplay.classList.remove('timer-active');
+                        sfx.siren.loop = true;
+                        playSfx('siren');
+                        setTimeout(() => {
+                            alert("OBJETIVO ALCANÇADO! MISSÃO CUMPRIDA.");
+                            sfx.siren.pause();
+                            sfx.siren.currentTime = 0;
+                        }, 500);
+                    }
+                }, 1000);
+                btnStart.textContent = "Pausar";
+            }
+        };
+
+        document.getElementById('btn-reset').onclick = () => {
+            if(confirm("Deseja abortar a missão atual? O tempo será reiniciado.")){
+                playSfx('click'); 
+                clearInterval(timerId);
+                timerId = null;
+                timeLeft = totalSeconds;
+                timerDisplay.classList.remove('timer-active');
+                updateTimerUI();
+                btnStart.textContent = "Engajar";
+            }
+        };
+
+        document.getElementById('btn-edit-timer').onclick = (e) => {
+            e.stopPropagation();
+            toggleTimerEdit();
+        };
+
+        document.getElementById('btn-save-timer').onclick = saveTimer;
+
+        // --- GRID LOGIC ---
+        const body = document.getElementById('schedule-body');
+
+        function getCellColor(text, id) {
+            if (completedCells.includes(id)) return 'color-completed';
+            const low = text.toLowerCase();
+            if (low.includes('português')) return 'color-portugues';
+            if (low.includes('matemática') || low.includes('rlm')) return 'color-exatas';
+            if (low.includes('direito') || low.includes('legislação')) return 'color-direito';
+            if (low.includes('revisão') || low.includes('simulado')) return 'color-revisao';
+            if (low.includes('descanso')) return 'color-descanso';
+            return 'color-default';
+        }
+
+        function toggleCompleted(e, id) {
+            if (e) e.preventDefault();
+            playSfx('click'); 
+            if (completedCells.includes(id)) {
+                completedCells = completedCells.filter(c => c !== id);
+            } else {
+                completedCells.push(id);
+            }
+            localStorage.setItem('completedCells_pmal', JSON.stringify(completedCells));
+            render();
+        }
+
+        function render() {
+            body.innerHTML = '';
+            for (let r = 0; r < rows; r++) {
+                days.forEach(day => {
+                    const cellId = `${day}-${r}`;
+                    const content = scheduleData[cellId] || "VAZIO";
+                    const isDone = completedCells.includes(cellId);
+                    
+                    const cell = document.createElement('div');
+                    cell.className = 'study-cell';
+                    
+                    const card = document.createElement('div');
+                    card.className = `subject-card ${content === 'VAZIO' ? 'color-default' : getCellColor(content, cellId)}`;
+                    
+                    const statusDot = document.createElement('div');
+                    statusDot.className = `status-dot ${isDone ? 'active' : ''}`;
+                    cell.appendChild(statusDot);
+
+                    card.innerHTML = content === 'VAZIO' ? '' : `<span>${isDone ? '✓ ' : ''}${content}</span>`;
+                    
+                    cell.appendChild(card);
+                    
+                    // INVERSÃO DE FUNÇÃO: Clique Esquerdo = Concluir
+                    cell.onclick = (e) => toggleCompleted(e, cellId);
+
+                    // INVERSÃO DE FUNÇÃO: Clique Direito = Editar
+                    cell.oncontextmenu = (e) => {
+                        e.preventDefault();
+                        currentCellId = cellId;
+                        document.getElementById('subject-select').value = "";
+                        document.getElementById('subject-custom').value = content === "VAZIO" ? "" : content;
+                        document.getElementById('modal-edit').classList.add('active');
+                    };
+
+                    body.appendChild(cell);
+                });
+            }
+        }
+
+        document.getElementById('modal-cancel').onclick = () => document.getElementById('modal-edit').classList.remove('active');
+        
+        document.getElementById('modal-save').onclick = () => {
+            const selectVal = document.getElementById('subject-select').value;
+            const customVal = document.getElementById('subject-custom').value.trim();
+            let finalVal = customVal !== "" ? customVal : selectVal;
+
+            if (finalVal === "VAZIO" || finalVal === "") {
+                delete scheduleData[currentCellId];
+                completedCells = completedCells.filter(c => c !== currentCellId);
+            } else {
+                scheduleData[currentCellId] = finalVal;
+            }
+            
+            playSfx('click'); 
+            
+            localStorage.setItem('studySchedule_institucional_v2', JSON.stringify(scheduleData));
+            localStorage.setItem('completedCells_pmal', JSON.stringify(completedCells));
+            document.getElementById('modal-edit').classList.remove('active');
+            render();
+        };
+
+        updateTimerUI();
+        render();
+    </script>
+</body>
+</html>
