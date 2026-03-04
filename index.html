@@ -145,8 +145,6 @@
             font-size: 1.2rem;
             font-weight: bold;
             border-radius: 4px;
-            appearance: auto !important;
-            -webkit-appearance: number-input !important;
         }
         .timer-input:focus { border-color: var(--pmal-red); }
 
@@ -177,7 +175,6 @@
             object-fit: contain;
         }
 
-        /* ESTILIZAÇÃO DO RODAPÉ ATUALIZADA */
         .footer-branding {
             width: 100%;
             padding: 40px 20px;
@@ -226,15 +223,12 @@
 
     <div class="max-w-7xl mx-auto relative">
         
-        <!-- Header / Comando PMAL -->
+        <!-- Header -->
         <div class="pmal-card rounded-2xl p-8 mb-10 flex flex-col lg:flex-row justify-between items-center gap-10 border-b-2 border-white/5">
-            
             <div class="flex items-center gap-8">
-                <!-- Logo Caveira BOPE -->
                 <div class="header-logo-display">
                     <img src="caveirabope.png" alt="Caveira BOPE" onerror="this.src='https://via.placeholder.com/150x150?text=BOPE'">
                 </div>
-                
                 <div class="text-center lg:text-left">
                     <h1 class="text-5xl font-black italic text-white tracking-tighter uppercase mb-2">Foco Tático</h1>
                     <div class="flex items-center justify-center lg:justify-start gap-4">
@@ -244,7 +238,7 @@
                 </div>
             </div>
 
-            <!-- Timer Ajustável -->
+            <!-- Timer com Correção de Tempo Real -->
             <div class="bg-zinc-900/40 p-6 rounded-2xl border border-white/5 shadow-2xl min-w-[340px] text-center backdrop-blur-sm">
                 <div class="flex justify-center items-center gap-2 mb-2">
                     <span class="text-[10px] font-black uppercase tracking-[0.4em] text-red-500">Contagem Regressiva</span>
@@ -255,7 +249,6 @@
                 
                 <div id="timer-display" class="mission-clock text-6xl font-bold mb-6 italic" onclick="toggleTimerEdit()">04:00:00</div>
                 
-                <!-- Área de edição com spinners visíveis -->
                 <div id="timer-edit-fields" class="hidden mb-6 flex justify-center items-center gap-2 font-mono text-xl">
                     <input type="number" id="input-hours" value="4" min="0" max="23" class="timer-input"> :
                     <input type="number" id="input-minutes" value="0" min="0" max="59" class="timer-input"> :
@@ -280,12 +273,11 @@
                 <div class="day-header border-r border-white/5">Sexta</div>
                 <div class="day-header border-r border-white/5 text-red-400">Sábado</div>
                 <div class="day-header text-red-400">Domingo</div>
-
                 <div id="schedule-body" class="contents"></div>
             </div>
         </div>
 
-        <!-- Legenda e Dicas -->
+        <!-- Legenda -->
         <div class="mt-10 grid grid-cols-1 md:grid-cols-4 gap-6">
             <div class="pmal-card p-6 rounded-2xl border-l-4 border-red-600">
                 <h4 class="text-red-600 text-[10px] font-black uppercase tracking-widest mb-2">Hierarquia</h4>
@@ -296,8 +288,8 @@
                 <p class="text-slate-400 text-xs leading-relaxed">Clique para marcar como concluído. Use o botão direito para editar.</p>
             </div>
             <div class="pmal-card p-6 rounded-2xl border-l-4 border-zinc-600">
-                <h4 class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-2">Tempo Flexível</h4>
-                <p class="text-slate-400 text-xs leading-relaxed">O cronômetro pulsa quando ativo. Ajuste sua meta no ícone de lápis.</p>
+                <h4 class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-2">Tempo Tático</h4>
+                <p class="text-slate-400 text-xs leading-relaxed">O tempo corre em tempo real baseado no relógio do sistema.</p>
             </div>
             <div class="pmal-card p-6 rounded-2xl border-l-4 border-red-600">
                 <h4 class="text-red-600 text-[10px] font-black uppercase tracking-widest mb-2">Foco</h4>
@@ -305,14 +297,13 @@
             </div>
         </div>
 
-        <!-- Rodapé SmarTech Reformulado -->
+        <!-- Rodapé -->
         <div class="footer-branding">
             <span class="footer-static-text">Criado e desenvolvido por</span>
             <a href="https://luis-lima-smartech.github.io/" target="_blank" class="smartech-footer-link" title="Visitar site SmarTech">
                 <img src="logo_smartech.JPEG" alt="SmarTech" onerror="this.src='https://via.placeholder.com/150x45?text=SmarTech'">
             </a>
         </div>
-
     </div>
 
     <!-- Modal de Edição -->
@@ -325,7 +316,6 @@
                     <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Modificar plano de ataque</p>
                 </div>
             </div>
-            
             <div class="space-y-6">
                 <div>
                     <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-3">Arsenal de Disciplinas:</label>
@@ -344,13 +334,11 @@
                         <option value="VAZIO">Limpar Bloco</option>
                     </select>
                 </div>
-
                 <div>
                     <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-3">Missão Customizada:</label>
                     <input type="text" id="subject-custom" placeholder="Ex: Criminologia, Redação..." class="w-full p-4 bg-zinc-900 border border-white/10 rounded-xl focus:border-red-600 outline-none transition-all text-white font-bold placeholder:text-zinc-700">
                 </div>
             </div>
-            
             <div class="flex gap-4 mt-10">
                 <button id="modal-cancel" class="flex-1 py-4 text-slate-500 font-black uppercase text-[11px] tracking-widest hover:bg-zinc-800 rounded-xl transition">Cancelar</button>
                 <button id="modal-save" class="flex-[2] py-4 bg-red-600 text-white font-black uppercase text-[11px] tracking-widest rounded-xl hover:bg-red-500 transition shadow-xl shadow-red-900/30">Salvar Alteração</button>
@@ -359,19 +347,17 @@
     </div>
 
     <script>
-        // --- CONFIGURAÇÃO DO ARSENAL SONORO ---
+        // --- SONS ---
         const sfxPaths = {
             click: 'engatilhar.mp4', 
             shots: 'tiros.mp4',      
             siren: 'sereia.mp4'      
         };
-
         const sfx = {
             click: new Audio(sfxPaths.click),
             shots: new Audio(sfxPaths.shots),
             siren: new Audio(sfxPaths.siren)
         };
-
         let audioUnlocked = false;
 
         const unlockAudio = async () => {
@@ -379,14 +365,11 @@
             try {
                 for (let key in sfx) {
                     sfx[key].volume = 0;
-                    const p = sfx[key].play();
-                    if (p) {
-                        p.then(() => {
-                            sfx[key].pause();
-                            sfx[key].currentTime = 0;
-                            sfx[key].volume = 0.5;
-                        }).catch(() => {});
-                    }
+                    sfx[key].play().then(() => {
+                        sfx[key].pause();
+                        sfx[key].currentTime = 0;
+                        sfx[key].volume = 0.5;
+                    }).catch(() => {});
                 }
                 audioUnlocked = true;
             } catch (e) {}
@@ -403,9 +386,145 @@
 
         document.addEventListener('contextmenu', (e) => e.preventDefault());
 
+        // --- LÓGICA DO CRONÔMETRO COM PERSISTÊNCIA E TEMPO REAL ---
+        let baseSeconds = parseInt(localStorage.getItem('customStudyTime')) || (4 * 60 * 60);
+        let timeLeft = baseSeconds;
+        let timerId = null;
+
+        const timerDisplay = document.getElementById('timer-display');
+        const timerEdit = document.getElementById('timer-edit-fields');
+        const btnStart = document.getElementById('btn-start');
+
+        function formatTime(totalSeconds) {
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
+            return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function updateTimerUI() {
+            timerDisplay.textContent = formatTime(timeLeft);
+        }
+
+        // Função que realmente sincroniza o tempo
+        function startTimerLogic(targetTimestamp) {
+            if (timerId) clearInterval(timerId);
+
+            timerId = setInterval(() => {
+                const now = Date.now();
+                const diff = Math.round((targetTimestamp - now) / 1000);
+
+                if (diff <= 0) {
+                    timeLeft = 0;
+                    updateTimerUI();
+                    clearInterval(timerId);
+                    timerId = null;
+                    localStorage.removeItem('timerEndTime');
+                    timerDisplay.classList.remove('timer-active');
+                    btnStart.textContent = "Engajar";
+                    sfx.siren.loop = true;
+                    playSfx('siren');
+                    setTimeout(() => {
+                        alert("OBJETIVO ALCANÇADO! MISSÃO CUMPRIDA.");
+                        sfx.siren.pause();
+                        sfx.siren.currentTime = 0;
+                        sfx.siren.loop = false;
+                    }, 500);
+                } else {
+                    // Tocar som de tiros a cada hora cheia
+                    if (diff % 3600 === 0 && diff < baseSeconds) {
+                        playSfx('shots');
+                    }
+                    timeLeft = diff;
+                    updateTimerUI();
+                }
+            }, 500); // Roda 2x por segundo para precisão UI
+        }
+
+        function checkPersistence() {
+            const savedEndTime = localStorage.getItem('timerEndTime');
+            if (savedEndTime) {
+                const now = Date.now();
+                const remaining = Math.round((parseInt(savedEndTime) - now) / 1000);
+                
+                if (remaining > 0) {
+                    timeLeft = remaining;
+                    btnStart.textContent = "Pausar";
+                    timerDisplay.classList.add('timer-active');
+                    startTimerLogic(parseInt(savedEndTime));
+                } else {
+                    localStorage.removeItem('timerEndTime');
+                }
+            }
+        }
+
+        btnStart.onclick = () => {
+            unlockAudio();
+            playSfx('click');
+
+            if (timerId) {
+                // PAUSAR
+                clearInterval(timerId);
+                timerId = null;
+                localStorage.removeItem('timerEndTime');
+                localStorage.setItem('pausedTimeLeft', timeLeft);
+                btnStart.textContent = "Retomar";
+                timerDisplay.classList.remove('timer-active');
+            } else {
+                // INICIAR / RETOMAR
+                const currentSeconds = timeLeft;
+                const endTime = Date.now() + (currentSeconds * 1000);
+                localStorage.setItem('timerEndTime', endTime);
+                localStorage.removeItem('pausedTimeLeft');
+                btnStart.textContent = "Pausar";
+                timerDisplay.classList.add('timer-active');
+                startTimerLogic(endTime);
+            }
+        };
+
+        function toggleTimerEdit() {
+            if (timerId) return; 
+            timerDisplay.classList.toggle('hidden');
+            timerEdit.classList.toggle('hidden');
+        }
+
+        document.getElementById('btn-save-timer').onclick = () => {
+            const h = parseInt(document.getElementById('input-hours').value) || 0;
+            const m = parseInt(document.getElementById('input-minutes').value) || 0;
+            const s = parseInt(document.getElementById('input-seconds').value) || 0;
+            baseSeconds = (h * 3600) + (m * 60) + s;
+            if (baseSeconds < 1) baseSeconds = 1;
+            timeLeft = baseSeconds;
+            localStorage.setItem('customStudyTime', baseSeconds);
+            localStorage.removeItem('timerEndTime');
+            localStorage.removeItem('pausedTimeLeft');
+            playSfx('click'); 
+            updateTimerUI();
+            toggleTimerEdit();
+        };
+
+        document.getElementById('btn-reset').onclick = () => {
+            if(confirm("Deseja abortar a missão atual?")){
+                playSfx('click'); 
+                clearInterval(timerId);
+                timerId = null;
+                localStorage.removeItem('timerEndTime');
+                localStorage.removeItem('pausedTimeLeft');
+                timeLeft = baseSeconds;
+                timerDisplay.classList.remove('timer-active');
+                updateTimerUI();
+                btnStart.textContent = "Engajar";
+            }
+        };
+
+        document.getElementById('btn-edit-timer').onclick = (e) => {
+            e.stopPropagation();
+            toggleTimerEdit();
+        };
+
+        // --- LÓGICA DA GRADE (MANTIDA) ---
         const rows = 4; 
         const days = ["seg", "ter", "qua", "qui", "sex", "sab", "dom"];
-        
         const defaultSchedule = {
             "seg-0": "Língua Portuguesa", "seg-1": "Direito Penal", "seg-2": "Língua Portuguesa", "seg-3": "Direito Penal",
             "ter-0": "Matemática e RLM", "ter-1": "Direito Constitucional", "ter-2": "Matemática e RLM", "ter-3": "Direito Constitucional",
@@ -420,100 +539,6 @@
         let completedCells = JSON.parse(localStorage.getItem('completedCells_pmal')) || [];
         let currentCellId = null;
 
-        // --- TIMER LOGIC ---
-        let totalSeconds = parseInt(localStorage.getItem('customStudyTime')) || (4 * 60 * 60);
-        let timeLeft = totalSeconds;
-        let timerId = null;
-
-        const timerDisplay = document.getElementById('timer-display');
-        const timerEdit = document.getElementById('timer-edit-fields');
-        const btnStart = document.getElementById('btn-start');
-
-        function updateTimerUI() {
-            const h = Math.floor(timeLeft / 3600);
-            const m = Math.floor((timeLeft % 3600) / 60);
-            const s = timeLeft % 60;
-            timerDisplay.textContent = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-        }
-
-        function toggleTimerEdit() {
-            if (timerId) return; 
-            timerDisplay.classList.toggle('hidden');
-            timerEdit.classList.toggle('hidden');
-        }
-
-        function saveTimer() {
-            const h = parseInt(document.getElementById('input-hours').value) || 0;
-            const m = parseInt(document.getElementById('input-minutes').value) || 0;
-            const s = parseInt(document.getElementById('input-seconds').value) || 0;
-            totalSeconds = (h * 3600) + (m * 60) + s;
-            if (totalSeconds < 1) totalSeconds = 1;
-            timeLeft = totalSeconds;
-            localStorage.setItem('customStudyTime', totalSeconds);
-            
-            playSfx('click'); 
-            
-            updateTimerUI();
-            toggleTimerEdit();
-        }
-
-        btnStart.onclick = () => {
-            unlockAudio();
-            playSfx('click'); 
-
-            if (timerId) {
-                clearInterval(timerId);
-                timerId = null;
-                btnStart.textContent = "Retomar";
-                timerDisplay.classList.remove('timer-active');
-            } else {
-                timerDisplay.classList.add('timer-active');
-                timerId = setInterval(() => {
-                    if (timeLeft > 0) {
-                        if (timeLeft % 3600 === 0 && timeLeft !== totalSeconds) {
-                            playSfx('shots');
-                        }
-                        timeLeft--;
-                        updateTimerUI();
-                    } else {
-                        clearInterval(timerId);
-                        timerId = null;
-                        timerDisplay.classList.remove('timer-active');
-                        sfx.siren.loop = true;
-                        playSfx('siren');
-                        setTimeout(() => {
-                            alert("OBJETIVO ALCANÇADO! MISSÃO CUMPRIDA.");
-                            sfx.siren.pause();
-                            sfx.siren.currentTime = 0;
-                        }, 500);
-                    }
-                }, 1000);
-                btnStart.textContent = "Pausar";
-            }
-        };
-
-        document.getElementById('btn-reset').onclick = () => {
-            if(confirm("Deseja abortar a missão atual? O tempo será reiniciado.")){
-                playSfx('click'); 
-                clearInterval(timerId);
-                timerId = null;
-                timeLeft = totalSeconds;
-                timerDisplay.classList.remove('timer-active');
-                updateTimerUI();
-                btnStart.textContent = "Engajar";
-            }
-        };
-
-        document.getElementById('btn-edit-timer').onclick = (e) => {
-            e.stopPropagation();
-            toggleTimerEdit();
-        };
-
-        document.getElementById('btn-save-timer').onclick = saveTimer;
-
-        // --- GRID LOGIC ---
-        const body = document.getElementById('schedule-body');
-
         function getCellColor(text, id) {
             if (completedCells.includes(id)) return 'color-completed';
             const low = text.toLowerCase();
@@ -525,44 +550,30 @@
             return 'color-default';
         }
 
-        function toggleCompleted(e, id) {
-            if (e) e.preventDefault();
-            playSfx('click'); 
-            if (completedCells.includes(id)) {
-                completedCells = completedCells.filter(c => c !== id);
-            } else {
-                completedCells.push(id);
-            }
-            localStorage.setItem('completedCells_pmal', JSON.stringify(completedCells));
-            render();
-        }
-
         function render() {
+            const body = document.getElementById('schedule-body');
             body.innerHTML = '';
             for (let r = 0; r < rows; r++) {
                 days.forEach(day => {
                     const cellId = `${day}-${r}`;
                     const content = scheduleData[cellId] || "VAZIO";
                     const isDone = completedCells.includes(cellId);
-                    
                     const cell = document.createElement('div');
                     cell.className = 'study-cell';
-                    
                     const card = document.createElement('div');
                     card.className = `subject-card ${content === 'VAZIO' ? 'color-default' : getCellColor(content, cellId)}`;
-                    
                     const statusDot = document.createElement('div');
                     statusDot.className = `status-dot ${isDone ? 'active' : ''}`;
                     cell.appendChild(statusDot);
-
                     card.innerHTML = content === 'VAZIO' ? '' : `<span>${isDone ? '✓ ' : ''}${content}</span>`;
-                    
                     cell.appendChild(card);
-                    
-                    // INVERSÃO DE FUNÇÃO: Clique Esquerdo = Concluir
-                    cell.onclick = (e) => toggleCompleted(e, cellId);
-
-                    // INVERSÃO DE FUNÇÃO: Clique Direito = Editar
+                    cell.onclick = () => {
+                        playSfx('click');
+                        if (completedCells.includes(cellId)) completedCells = completedCells.filter(c => c !== cellId);
+                        else completedCells.push(cellId);
+                        localStorage.setItem('completedCells_pmal', JSON.stringify(completedCells));
+                        render();
+                    };
                     cell.oncontextmenu = (e) => {
                         e.preventDefault();
                         currentCellId = cellId;
@@ -570,34 +581,26 @@
                         document.getElementById('subject-custom').value = content === "VAZIO" ? "" : content;
                         document.getElementById('modal-edit').classList.add('active');
                     };
-
                     body.appendChild(cell);
                 });
             }
         }
 
-        document.getElementById('modal-cancel').onclick = () => document.getElementById('modal-edit').classList.remove('active');
-        
         document.getElementById('modal-save').onclick = () => {
             const selectVal = document.getElementById('subject-select').value;
             const customVal = document.getElementById('subject-custom').value.trim();
             let finalVal = customVal !== "" ? customVal : selectVal;
-
-            if (finalVal === "VAZIO" || finalVal === "") {
-                delete scheduleData[currentCellId];
-                completedCells = completedCells.filter(c => c !== currentCellId);
-            } else {
-                scheduleData[currentCellId] = finalVal;
-            }
-            
-            playSfx('click'); 
-            
+            if (finalVal === "VAZIO" || finalVal === "") delete scheduleData[currentCellId];
+            else scheduleData[currentCellId] = finalVal;
             localStorage.setItem('studySchedule_institucional_v2', JSON.stringify(scheduleData));
-            localStorage.setItem('completedCells_pmal', JSON.stringify(completedCells));
             document.getElementById('modal-edit').classList.remove('active');
             render();
         };
 
+        document.getElementById('modal-cancel').onclick = () => document.getElementById('modal-edit').classList.remove('active');
+
+        // INIT
+        checkPersistence();
         updateTimerUI();
         render();
     </script>
